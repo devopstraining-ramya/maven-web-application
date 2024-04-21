@@ -3,10 +3,10 @@ def mavenHome = tool name: "maven 3.9.6"
 echo "jenkins url is: ${env.JENKINS_URL}"
 echo "node name is: ${env.NODE_NAME}"
 echo "job name is: ${env.JOB_NAME}"
+properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 
-properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 stage('CheckOutCode'){
-git credentialsId: 'ab6f26ef-4873-47c4-84b6-a68f343a25d0', url: 'https://github.com/devopstraining-ramya/maven-web-application.git'
+git branch: 'development', credentialsId: 'ab6f26ef-4873-47c4-84b6-a68f343a25d0', url: 'https://github.com/devopstraining-ramya/maven-web-application.git'
 }
 stage('Build'){
 sh "${mavenHome}/bin/mvn clean package"
