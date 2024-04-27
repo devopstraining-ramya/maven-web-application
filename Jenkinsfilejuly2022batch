@@ -5,6 +5,7 @@ echo "node name is: ${env.NODE_NAME}"
 echo "job name is: ${env.JOB_NAME}"
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'JobLocalConfiguration', changeReasonComment: ''], pipelineTriggers([pollSCM('* * * * *')])])
 try{
+SlackNotification('STARTED')
 stage('CheckOutCode'){
 git branch: 'development', credentialsId: 'ab6f26ef-4873-47c4-84b6-a68f343a25d0', url: 'https://github.com/devopstraining-ramya/maven-web-application.git'
 }
