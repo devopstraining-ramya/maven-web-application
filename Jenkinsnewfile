@@ -1,0 +1,36 @@
+@Library ('Jenkinsslacksharedlibs') _
+pipeline{
+agent any
+tools {
+maven "maven 3.9.6"
+}
+parameters {
+  choice choices: ['development', 'master', 'uat', 'stage'], description: 'select the BranchName', name: 'BranchName'
+  string defaultValue: 'Ramya', description: 'Getting the Name Parameter value', name: 'Name'
+}
+stages{
+//CheckOutCode
+stage('CheckOutCode'){
+steps {
+    sendSlackNotifications ('STARTED')
+git branch: "${params.BranchName}", credentialsId: 'f1d6f6e0-feb9-479d-8952-71853db6dd08', url: 'https://github.com/devopstraining-ramya/maven-web-application.git'
+}
+}//stage closing
+//Build
+stage('Build') {
+steps{
+sh "mvn clean package"
+}
+}
+
+}//stages closing
+post {
+  success {
+    sendSlackNotifications(currentBuild.result)
+  }
+  failure {
+    sendSlackNotifications(currentBuild.result)
+  }
+}
+
+}//pipeline closing
